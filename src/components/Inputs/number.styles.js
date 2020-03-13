@@ -1,42 +1,40 @@
 import styled from 'styled-components';
-import { Input } from './index.styles';
+import { ifProp, getColorFromTheme, Colors, border } from '../../Theme';
 
-export const NumberInputWrapper = styled.div`
+export const Wrapper = styled.div`
   display: inline-block;
   position: relative;
-  
-  ${ Input } {
-    padding-left: 12px;
-  }
 `;
 
-const NumberInputSpan = styled.span`
-  background: white;
-  border-radius: 3px;
-  border: 1px solid black;
-  color: black;
+const size = '8px';
+const margin = '2px';
+
+const getDirection = () => ifProp('top', 'top', 'bottom');
+
+export const Button = styled.span`
+  ${ border(Colors.Black) };
+  
+  color: ${ getColorFromTheme(Colors.Black) };
+  background: ${ getColorFromTheme(Colors.White) };
+  
+  height: ${ size };
+  width: ${ size };
+  
+  right: ${ margin };
+  ${ getDirection }: ${ margin };
+  
   cursor: pointer;
   display: none;
-  font-size: 12px;
-  font-weight: 800;
-  height: 60%;
-  left: 12px;
-  padding-top: -3px;
   position: absolute;
-  text-align: center;
   user-select: none;
-  vertical-align: middle;
-  width: 10px;
+  line-height: 0;
+  padding: 1px;
   
-  ${ NumberInputWrapper }:hover > & {
+  ${ Wrapper }:hover > & {
     display: inline-block;
   }
-`;
-
-export const UpArrow = styled(NumberInputSpan)`
-  top: -5px;
-`;
-
-export const DownArrow = styled(NumberInputSpan)`
-  bottom: -5px;
+  
+  &:hover {
+    background: ${ getColorFromTheme(Colors.LightestGrey) }
+  }
 `;

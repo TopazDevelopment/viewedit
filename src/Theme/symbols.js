@@ -6,9 +6,12 @@ export const Colors = {
 
   LightBlue: Symbol('LIGHTBLUE'),
   LightGrey: Symbol('LIGHTGREY'),
+  LightestGrey: Symbol('LIGHTEST-GREY'),
   Red: Symbol('RED'),
   Salmon: Symbol('SALMON'),
   Black: Symbol('BLACK'),
+  White: Symbol('WHITE'),
+
 };
 
 export const Metrics = {

@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { Wrapper } from './ViewEdit.styles';
+import { Container, Wrapper } from './ViewEdit.styles';
+import Button from './Button';
 
 class ViewEdit extends Component {
   state = {
@@ -49,7 +50,48 @@ class ViewEdit extends Component {
     return <>{ this.props.editComponentProps.value }</>;
   }
 
+  addInput () {
+    this.props.editComponentProps.onChange([
+      ...this.props.editComponentProps.value,
+      undefined
+    ])
+  }
+
+  updateValue (index) {
+    return (e) => {
+      const val = [...this.props.editComponentProps.value];
+      val.splice(index, 1, e);
+      this.props.editComponentProps.onChange(val);
+    }
+  }
+
+  renderMultiple () {
+    return (
+      <Container>
+        { this.props.editComponentProps.value.map((val, key) => {
+          const props = {
+            onChange: this.updateValue(key).bind(this),
+            value: val,
+          };
+          return <ViewEdit
+            key={ key }
+            editComponent={ this.props.editComponent }
+            editComponentProps={ props }
+          />
+        }) }
+
+        <Button
+          icon="plus"
+          label="Add"
+          onClick={ this.addInput.bind(this) }
+        />
+      </Container>
+    );
+  }
+
   render () {
+    if (this.props.multiple) return this.renderMultiple();
+
     return (
       <Wrapper onClick={ this.toggle.bind(this) } isEditing={ this.state.editing }>
         { this.renderComponent() || this.renderValue() }
@@ -62,11 +104,13 @@ ViewEdit.propTypes = {
   editComponent: PropTypes.any.isRequired,
   editComponentProps: PropTypes.shape({
     onChange: PropTypes.func.isRequired,
-    value: PropTypes.any.isRequired,
+    value: PropTypes.any,
   }),
 
   viewComponent: PropTypes.any,
   viewComponentProps: PropTypes.object,
+
+  multiple: PropTypes.bool,
 };
 
 export default ViewEdit;

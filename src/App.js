@@ -4,6 +4,7 @@ import { NumberInput, SelectInput, TextInput } from './components/Inputs';
 import ViewEdit from './Presentation/ViewEdit';
 import { ListRenderer } from './Presentation/ListRenderer';
 import { FlexRow } from './Presentation/Flex';
+import Icon from './Presentation/Icon';
 
 class App extends React.Component {
   state = {
@@ -11,17 +12,29 @@ class App extends React.Component {
     items: ['1'],
     string: 'Test',
     value: 123,
+    multiple: [],
 
     selectItems: [
-      ['one', '1'],
-      ['two', '2'],
-      ['three', '3'],
-      ['four', '4'],
+      ['1', 'one'],
+      ['2', 'two'],
+      ['3', 'three'],
+      ['4', 'four'],
+    ],
+
+    selectItemStrings: [
+      'one', 'two', 'three', 'four', 'five'
+    ],
+
+    selectItemObjects: [
+      {key: 1, value: 'test'},
+      {key: 2, value: 'testing'},
+      {key: 3, value: 'tester'},
     ]
   };
 
   updateState (key) {
     return (val) => {
+      console.log('update app state', val);
       this.setState({ [key]: val })
     };
   }
@@ -47,9 +60,15 @@ class App extends React.Component {
           onChange={ this.updateState('items').bind(this) }
         />
         <SelectInput
+          multiple
+          options={ this.state.selectItemObjects }
+          value={ this.state.items }
+          onChange={ this.updateState('items').bind(this) }
+        />
+        <SelectInput
           onChange={ this.updateState('item').bind(this) }
           value={ this.state.item }
-          options={ this.state.selectItems }
+          options={ this.state.selectItemStrings }
         />
       </FlexRow>
     );
@@ -90,6 +109,13 @@ class App extends React.Component {
           viewComponentProps={
             {
               options: this.state.selectItems,
+              lookup: val => {
+                console.debug('val', val);
+                return this.state.selectItems.find(i => {
+                  console.debug('i', i);
+                  return i[0] === val;
+                })[1];
+              }
             }
           }
         />
@@ -99,13 +125,13 @@ class App extends React.Component {
             {
               onChange: this.updateState('item').bind(this),
               value: this.state.item,
-              options: this.state.selectItems,
+              options: this.state.selectItemObjects,
             }
           }
           viewComponent={ ListRenderer }
           viewComponentProps={
             {
-              options: this.state.selectItems,
+              options: this.state.selectItemObjects,
             }
           }
         />
@@ -119,6 +145,16 @@ class App extends React.Component {
         { this.renderDefaultInputs() }
         <br /><br /><br />
         { this.renderViewEdits() }
+        <br />
+        <ViewEdit
+          multiple
+          editComponent={ NumberInput }
+          editComponentProps={ {
+            onChange: this.updateState('multiple').bind(this),
+            value: this.state.multiple,
+          } }
+
+        />
       </Page>
     )
   }
